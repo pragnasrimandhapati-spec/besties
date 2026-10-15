@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Our Friendship Journey</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar navbar-expand sticky-top bestie-nav">
+    <div class="container justify-content-center">
+      <ul class="navbar-nav gap-1">
+        <li class="nav-item"><a class="nav-link" href="#top">🌸 Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#memories">Memories</a></li>
+        <li class="nav-item"><a class="nav-link" href="#poses">Poses</a></li>
+        <li class="nav-item"><a class="nav-link" href="#gallery">Album</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero" id="top">
+    <canvas id="petals" aria-hidden="true"></canvas>
+
+    <div class="hero-text text-center">
+      <p class="eyebrow">college besties · forever</p>
+      <h1>
+        <span id="nameA" class="name" contenteditable="true" spellcheck="false" title="Click to edit">Friend One</span>
+        <span class="amp">&amp;</span>
+        <span id="nameB" class="name" contenteditable="true" spellcheck="false" title="Click to edit">Friend Two</span>
+      </h1>
+      <p class="sub mx-auto">Click the names to make them yours. Then scroll &mdash; our story is just beginning. 🌸</p>
+    </div>
+
+    <img class="hero-art" src="assets/friends.svg" alt="Illustration of two college best friends sitting together under a tree">
+  </header>
+
+  <main>
+    <!-- ============ MEMORIES ============ -->
+    <section id="memories" class="container py-5 text-center">
+      <h2>Memories We'll Make 💞</h2>
+      <p class="lead-text mx-auto">Tap <b>“We did it”</b> every time you tick one off.</p>
+      <div class="progress mx-auto bestie-progress" role="progressbar" aria-label="Memories made">
+        <div id="memBar" class="progress-bar" style="width:0%"></div>
+      </div>
+      <p id="memCount" class="small mt-2 mb-4"></p>
+      <div id="memoryGrid" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 text-start"></div>
+    </section>
+
+    <!-- ============ POSES ============ -->
+    <section id="poses" class="py-5 poses-bg">
+      <div class="container text-center">
+        <h2>Photo Poses for Our Journey 📸</h2>
+        <p class="lead-text mx-auto">
+          Pick a pose, recreate it together, then upload the photo on that pose's card.
+          <a class="fw-bold" href="poses/photo-poses.md" download>⬇ Download the poses guide file</a>
+        </p>
+
+        <!-- storage notice + optional Firebase backup -->
+        <div class="alert alert-warning text-start mx-auto notice" role="alert">
+          <div class="fw-bold mb-1">🗂 Photos are kept in session storage</div>
+          They stay in this browser tab while you use the app and are <b>erased when you close the tab</b>.
+          Use <b>Download</b> on a photo (or “Download all”) to keep a copy.
+          <hr class="my-2">
+          <div class="d-flex flex-wrap align-items-center gap-3">
+            <div class="form-check form-switch m-0">
+              <input class="form-check-input" type="checkbox" role="switch" id="cloudSwitch">
+              <label class="form-check-label" for="cloudSwitch">Also back up to Firebase (optional)</label>
+            </div>
+            <span id="cloudStatus" class="badge text-bg-secondary">Off</span>
+            <button id="cloudRestore" class="btn btn-sm btn-outline-dark" hidden>☁ Restore from backup</button>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 justify-content-center align-items-center mb-3">
+          <div class="btn-group" role="group" aria-label="Filter poses" id="filters">
+            <button type="button" class="btn btn-outline-success active" data-f="all">All</button>
+            <button type="button" class="btn btn-outline-success" data-f="todo">To do</button>
+            <button type="button" class="btn btn-outline-success" data-f="done">Captured</button>
+          </div>
+          <button class="btn btn-bestie" id="randomPose">🎲 Surprise us with a pose</button>
+        </div>
+
+        <div class="progress mx-auto bestie-progress" role="progressbar" aria-label="Poses captured">
+          <div id="poseBar" class="progress-bar" style="width:0%"></div>
+        </div>
+        <p id="poseCount" class="small mt-2 mb-4"></p>
+
+        <div id="poseGrid" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4 text-start"></div>
+      </div>
+    </section>
+
+    <!-- ============ ALBUM ============ -->
+    <section id="gallery" class="container py-5 text-center">
+      <h2>Our Album 🌼</h2>
+      <p class="lead-text mx-auto">Every pose photo you upload shows up here, like a little memory book.</p>
+      <button id="downloadAll" class="btn btn-outline-success mb-4" hidden>⬇ Download all photos</button>
+      <div id="album" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4"></div>
+      <p id="albumEmpty" class="small">No photos yet &mdash; go recreate your first pose! 💕</p>
+    </section>
+  </main>
+
+  <footer class="text-center small py-4">
+    Made with 🌸 for two best friends.
+  </footer>
+
+  <!-- ============ LIGHTBOX (Bootstrap modal) ============ -->
+  <div class="modal fade" id="photoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 bg-transparent">
+        <div class="modal-body text-center p-0">
+          <img id="lbImg" class="lb-img" alt="">
+          <p id="lbCap" class="lb-cap"></p>
+          <div class="d-flex gap-2 justify-content-center">
+            <a id="lbDownload" class="btn btn-light btn-sm" download="photo.jpg">⬇ Download</a>
+            <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toasts"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/poses.js"></script>
+  <script src="js/petals.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/firebase-sync.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
